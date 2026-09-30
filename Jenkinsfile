@@ -1,6 +1,9 @@
 pipeline {
 
     agent any
+    tools {
+        maven 'Maven-3.9.16'
+    }
 
     environment {
         IMAGE_NAME = "YOUR_DOCKERHUB_USERNAME/student-management"
