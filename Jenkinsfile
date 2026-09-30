@@ -2,20 +2,17 @@ pipeline {
 
     agent any
 
-    tools {
-        maven 'maven-3.9.16'
-    }
-
     environment {
         IMAGE_NAME = "psbd/student-management"
-        IMAGE_VERSION = "1.0.${BUILD_NUMBER}"
+        IMAGE_VERSION = "1.0.11"
     }
 
     stages {
 
         stage('Checkout') {
             steps {
-                checkout scm
+                git branch: 'main',
+                    url: 'https://github.com/shruti-1234-patel/Devops-student-management-system-.git'
             }
         }
 
@@ -25,16 +22,12 @@ pipeline {
             }
         }
 
-        stage('Unit Testing') {
-            steps {
-                bat 'mvn test'
-            }
-        }
-
         stage('Artifact Versioning') {
             steps {
-                bat 'copy target\\student-management-1.0.0.jar target\\student-management-%IMAGE_VERSION%.jar'
-                bat 'copy target\\student-management-1.0.0.jar target\\app.jar'
+                bat '''
+                copy target\\student-management-1.0.0.jar target\\student-management-1.0.11.jar
+                copy target\\student-management-1.0.0.jar target\\app.jar
+                '''
             }
         }
 
@@ -47,59 +40,41 @@ pipeline {
         stage('Docker Build') {
             steps {
                 bat 'docker build -t %IMAGE_NAME%:%IMAGE_VERSION% .'
-                bat 'docker tag %IMAGE_NAME%:%IMAGE_VERSION% %IMAGE_NAME%:latest'
             }
         }
 
-     stage('Trivy Image Scan') {
-    steps {
-        bat 'trivy image --timeout 10m psbd/student-management:1.0.11'
-    }
-}
+        stage('Trivy Image Scan') {
+            steps {
+                bat 'trivy image --timeout 10m %IMAGE_NAME%:%IMAGE_VERSION%'
+            }
+        }
 
         stage('Docker Push') {
             steps {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'dockerhub-credentials',
-                        usernameVariable: 'DOCKER_USER',
-                        passwordVariable: 'DOCKER_PASSWORD'
-                    )
-                ]) {
-                    bat 'docker login -u %DOCKER_USER% -p %DOCKER_PASSWORD%'
-                    bat 'docker push %IMAGE_NAME%:%IMAGE_VERSION%'
-                    bat 'docker push %IMAGE_NAME%:latest'
-                }
+                bat 'docker push %IMAGE_NAME%:%IMAGE_VERSION%'
             }
         }
 
         stage('Kubernetes Deploy') {
             steps {
-                bat 'kubectl apply -f k8s/configmap.yaml'
-                bat 'kubectl apply -f k8s/secret.yaml'
-                bat 'kubectl apply -f k8s/mysql-deployment.yaml'
-                bat 'kubectl apply -f k8s/mysql-service.yaml'
-                bat 'kubectl apply -f k8s/deployment.yaml'
-                bat 'kubectl apply -f k8s/service.yaml'
+                bat 'kubectl apply -f deployment.yaml'
             }
         }
 
         stage('Deployment Status') {
             steps {
                 bat 'kubectl get pods'
-                bat 'kubectl get services'
             }
         }
     }
 
     post {
-
         success {
-            echo 'Student Management CI/CD Pipeline completed successfully.'
+            echo 'Student Management Application deployed successfully!'
         }
 
         failure {
-            echo 'Pipeline failed. Check the stage logs.'
+            echo 'Pipeline failed. Please check the Jenkins console log.'
         }
     }
 }
