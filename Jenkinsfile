@@ -1,12 +1,13 @@
 pipeline {
 
     agent any
-   tools {
-    maven 'maven-3.9.16'
-}
+
+    tools {
+        maven 'maven-3.9.16'
+    }
 
     environment {
-        IMAGE_NAME = "YOUR_DOCKERHUB_USERNAME/student-management"
+        IMAGE_NAME = "psbd/student-management"
         IMAGE_VERSION = "1.0.${BUILD_NUMBER}"
     }
 
