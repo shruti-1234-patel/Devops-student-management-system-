@@ -51,9 +51,9 @@ pipeline {
             }
         }
 
-       stage('Trivy Image Scan') {
+     stage('Trivy Image Scan') {
     steps {
-        bat 'trivy image --timeout 10m psbd/student-management:1.0.9'
+        bat 'trivy image --timeout 10m psbd/student-management:1.0.11'
     }
 }
 
