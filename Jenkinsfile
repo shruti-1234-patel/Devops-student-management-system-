@@ -32,12 +32,11 @@ pipeline {
         }
 
         stage('Artifact Versioning') {
-   stage('Artifact Versioning') {
-    steps {
-        bat 'copy target\\student-management-1.0.0.jar target\\student-management-%IMAGE_VERSION%.jar'
-        bat 'copy target\\student-management-1.0.0.jar target\\app.jar'
-    }
-}
+            steps {
+                bat 'copy target\\student-management-1.0.0.jar target\\student-management-%IMAGE_VERSION%.jar'
+                bat 'copy target\\student-management-1.0.0.jar target\\app.jar'
+            }
+        }
 
         stage('Security Scan') {
             steps {
@@ -67,11 +66,8 @@ pipeline {
                         passwordVariable: 'DOCKER_PASSWORD'
                     )
                 ]) {
-
                     bat 'docker login -u %DOCKER_USER% -p %DOCKER_PASSWORD%'
-
                     bat 'docker push %IMAGE_NAME%:%IMAGE_VERSION%'
-
                     bat 'docker push %IMAGE_NAME%:latest'
                 }
             }
@@ -79,24 +75,19 @@ pipeline {
 
         stage('Kubernetes Deploy') {
             steps {
-
                 bat 'kubectl apply -f k8s/configmap.yaml'
                 bat 'kubectl apply -f k8s/secret.yaml'
                 bat 'kubectl apply -f k8s/mysql-deployment.yaml'
                 bat 'kubectl apply -f k8s/mysql-service.yaml'
                 bat 'kubectl apply -f k8s/deployment.yaml'
                 bat 'kubectl apply -f k8s/service.yaml'
-
             }
         }
 
         stage('Deployment Status') {
             steps {
-
                 bat 'kubectl get pods'
-
                 bat 'kubectl get services'
-
             }
         }
     }
