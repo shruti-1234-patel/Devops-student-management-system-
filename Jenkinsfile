@@ -51,11 +51,11 @@ pipeline {
             }
         }
 
-        stage('Docker Image Scan') {
-            steps {
-                bat 'trivy image %IMAGE_NAME%:%IMAGE_VERSION%'
-            }
-        }
+       stage('Trivy Image Scan') {
+    steps {
+        bat 'trivy image --timeout 10m psbd/student-management:1.0.9'
+    }
+}
 
         stage('Docker Push') {
             steps {
