@@ -32,10 +32,11 @@ pipeline {
         }
 
         stage('Artifact Versioning') {
-            steps {
-                bat 'copy target\\student-management-1.0.0.jar target\\student-management-%IMAGE_VERSION%.jar'
-            }
-        }
+    steps {
+        bat 'copy target\\student-management-1.0.0.jar target\\student-management-%IMAGE_VERSION%.jar'
+        bat 'copy target\\student-management-1.0.0.jar target\\app.jar'
+    }
+}
 
         stage('Security Scan') {
             steps {
