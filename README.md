@@ -7,27 +7,27 @@ and implements an end-to-end DevOps pipeline.
 
 ## Technologies Used
 
-- Java 21
-- Spring Boot
-- Maven
-- MySQL
-- Git
-- GitHub
-- Jenkins
-- JUnit
-- Docker
-- Docker Hub
-- Kubernetes
-- Prometheus
-- Grafana
-- Trivy
+* Java 21
+* Spring Boot
+* Maven
+* MySQL
+* Git
+* GitHub
+* Jenkins
+* JUnit
+* Docker
+* Docker Hub
+* Kubernetes
+* Prometheus
+* Grafana
+* Trivy
 
 ## CRUD Operations
 
-- Create Student
-- Read Student
-- Update Student
-- Delete Student
+* Create Student
+* Read Student
+* Update Student
+* Delete Student
 
 ## REST APIs
 
@@ -79,3 +79,12 @@ kubectl apply -f k8s/
 ## Monitoring
 
 Prometheus and Grafana are deployed using Kubernetes.
+
+\## Frontend
+
+
+
+The Student Management System provides a web-based frontend
+
+for performing Create, Read, Update and Delete operations.
+
