@@ -5,6 +5,7 @@ pipeline {
     environment {
         IMAGE_NAME = "psbd/student-management"
         IMAGE_VERSION = "1.0.11"
+        KUBECONFIG = "C:\\Users\\admin\\.kube\\config"
     }
 
     stages {
@@ -56,23 +57,24 @@ pipeline {
         }
 
         stage('Kubernetes Check') {
-    steps {
-        bat 'set KUBECONFIG=C:\\Users\\admin\\.kube\\config && kubectl config current-context'
-        bat 'set KUBECONFIG=C:\\Users\\admin\\.kube\\config && kubectl get nodes'
-    }
-}
-       stage('Kubernetes Deploy') {
-    steps {
-        bat 'set KUBECONFIG=C:\\Users\\admin\\.kube\\config && kubectl apply -f deployment.yaml'
-    }
-}
+            steps {
+                bat 'kubectl config current-context'
+                bat 'kubectl get nodes'
+            }
+        }
+
+        stage('Kubernetes Deploy') {
+            steps {
+                bat 'kubectl apply -f deployment.yaml'
+            }
+        }
 
         stage('Deployment Status') {
-    steps {
-        bat 'set KUBECONFIG=C:\\Users\\admin\\.kube\\config && kubectl get pods'
+            steps {
+                bat 'kubectl get pods'
+            }
+        }
     }
-}
-    
 
     post {
         success {
@@ -84,5 +86,3 @@ pipeline {
         }
     }
 }
-
-
