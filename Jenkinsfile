@@ -56,24 +56,23 @@ pipeline {
         }
 
         stage('Kubernetes Check') {
-            steps {
-                bat 'kubectl config current-context'
-                bat 'kubectl get nodes'
-            }
-        }
-
-        stage('Kubernetes Deploy') {
-            steps {
-                bat 'kubectl apply -f deployment.yaml'
-            }
-        }
+    steps {
+        bat 'set KUBECONFIG=C:\\Users\\admin\\.kube\\config && kubectl config current-context'
+        bat 'set KUBECONFIG=C:\\Users\\admin\\.kube\\config && kubectl get nodes'
+    }
+}
+       stage('Kubernetes Deploy') {
+    steps {
+        bat 'set KUBECONFIG=C:\\Users\\admin\\.kube\\config && kubectl apply -f deployment.yaml'
+    }
+}
 
         stage('Deployment Status') {
-            steps {
-                bat 'kubectl get pods'
-            }
-        }
+    steps {
+        bat 'set KUBECONFIG=C:\\Users\\admin\\.kube\\config && kubectl get pods'
     }
+}
+    
 
     post {
         success {
