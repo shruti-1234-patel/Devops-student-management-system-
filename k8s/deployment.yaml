@@ -1,38 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
-
 metadata:
   name: student-management
-
 spec:
-
   replicas: 2
-
   selector:
     matchLabels:
       app: student-management
-
   template:
-
     metadata:
       labels:
         app: student-management
-
     spec:
-
       containers:
-
         - name: student-management
-
-          image: student-management:1.0.0
-
+          image: psbd/student-management:1.0.0
           imagePullPolicy: IfNotPresent
-
           ports:
             - containerPort: 8080
 
           env:
-
             - name: SPRING_DATASOURCE_URL
               value: jdbc:mysql://mysql:3306/studentdb
 
@@ -56,16 +43,27 @@ spec:
               cpu: "500m"
               memory: "512Mi"
 
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            failureThreshold: 30
+            periodSeconds: 10
+
           livenessProbe:
             httpGet:
               path: /actuator/health
               port: 8080
-            initialDelaySeconds: 30
+            initialDelaySeconds: 10
             periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
 
           readinessProbe:
             httpGet:
               path: /actuator/health
               port: 8080
-            initialDelaySeconds: 20
+            initialDelaySeconds: 10
             periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
