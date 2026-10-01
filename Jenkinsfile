@@ -55,6 +55,13 @@ pipeline {
             }
         }
 
+        stage('Kubernetes Check') {
+            steps {
+                bat 'kubectl config current-context'
+                bat 'kubectl get nodes'
+            }
+        }
+
         stage('Kubernetes Deploy') {
             steps {
                 bat 'kubectl apply -f deployment.yaml'
@@ -78,3 +85,5 @@ pipeline {
         }
     }
 }
+
+
